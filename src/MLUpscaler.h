@@ -5,6 +5,7 @@
 #include "DDImage/Knobs.h"
 #include <DDImage/Knob.h>
 #include "DDImage/ToBuffer.h"
+#include "DDImage/Format.h"
 
 using namespace DD::Image;
 
@@ -42,4 +43,6 @@ private:
 
   ChannelSet d_defaultChannels;
   int d_defaultNumberOfChannels;
+  
+  FormatPair d_outputFormat;
 };

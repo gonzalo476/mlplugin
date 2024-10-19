@@ -50,11 +50,15 @@ find_package(Qt5 REQUIRED COMPONENTS Widgets)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
+#opencv
+find_package(OpenCV REQUIRED)
+include_directories(${OpenCV_INCLUDE_DIRS})
+
 # Add libraries
 add_library(${CMAKE_PROJECT_NAME} SHARED 
     src/MLUpscaler.cpp
 )
-target_link_libraries(${CMAKE_PROJECT_NAME} Qt5::Widgets)
+target_link_libraries(${CMAKE_PROJECT_NAME} Qt5::Widgets ${OpenCV_LIBS})
 
 if (NOT NUKE_10.5)
     target_link_libraries(${CMAKE_PROJECT_NAME} DDImage glew32 legacy_stdio_definitions Qt5::Widgets)
