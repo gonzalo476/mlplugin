@@ -7,6 +7,8 @@
 #include "DDImage/ToBuffer.h"
 #include "DDImage/Format.h"
 
+#include <opencv2/opencv.hpp>
+
 using namespace DD::Image;
 
 static const char *const CLASS = "MLUpscaler";
@@ -45,4 +47,7 @@ private:
   int d_defaultNumberOfChannels;
   
   FormatPair d_outputFormat;
+  FormatPair formats;
+
+  cv::Mat sourceMat = cv::Mat::zeros(0, 0, CV_8UC3);
 };

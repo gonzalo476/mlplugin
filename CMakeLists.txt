@@ -51,12 +51,15 @@ find_package(Qt5 REQUIRED COMPONENTS Widgets)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 #opencv
-find_package(OpenCV REQUIRED)
-include_directories(${OpenCV_INCLUDE_DIRS})
+# include_directories(OpenCV/build/include)
+# set(OpenCV_LIBS OpenCV/build/X64/vc16/lib/opencv_world470.lib)
+find_package(OpenCV REQUIRED)  # Encuentra OpenCV en el sistema
+include_directories(${OpenCV_INCLUDE_DIRS})  # Incluye directorios de OpenCV
 
 # Add libraries
 add_library(${CMAKE_PROJECT_NAME} SHARED 
     src/MLUpscaler.cpp
+    src/Utils.cpp
 )
 target_link_libraries(${CMAKE_PROJECT_NAME} Qt5::Widgets ${OpenCV_LIBS})
 
