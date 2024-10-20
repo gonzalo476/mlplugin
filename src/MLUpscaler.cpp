@@ -12,7 +12,7 @@ MLUpscalerIop::MLUpscalerIop(Node *node) : PlanarIop(node)
 {
   d_scale = 1;
 
-  d_defaultChannels = Mask_RGBA;
+  d_defaultChannels = Mask_RGB;
   d_defaultNumberOfChannels = d_defaultChannels.size();
   d_outputFormat.format(nullptr);
 };
@@ -25,6 +25,11 @@ void MLUpscalerIop::knobs(Knob_Callback f)
 void MLUpscalerIop::_validate(bool for_real)
 {
 
+  if (input(0)) {
+    input(0)->validate(for_real);
+  }
+
+  // copy_info();
   std::cout << "Format size(): " << input0().format().size() << std::endl;
   std::cout << "Format area(): " << input0().format().area() << std::endl;
   std::cout << "Format height(): " << input0().format().height() << std::endl;
@@ -39,11 +44,9 @@ void MLUpscalerIop::_validate(bool for_real)
   std::cout << "Format x() : " << input0().format().x() << std::endl;
   std::cout << "Format y() : " << input0().format().y() << std::endl;
 
-  Format format_ = input0().format();
-
-  // info_.full_size_format(customFormat); // size the proxy format
-  info_.format(input0().format()); // the size of the image
-  info_.channels();
+  info_.full_size_format(input0().full_size_format()); // size the proxy format
+  info_.format(input0().format());                     // the size of the image
+  info_.channels(Mask_RGB);
   info_.set(format());
 }
 
@@ -54,11 +57,11 @@ void MLUpscalerIop::getRequests(const Box &box, const ChannelSet &channels, int 
 
 void MLUpscalerIop::renderStripe(ImagePlane &imagePlane)
 {
-  //input0().fetchPlane(imagePlane);
+  // input0().fetchPlane(imagePlane);
 
-  //IOPtoCVMat(input0(), sourceMat);
-  //cv::resize(sourceMat, sourceMat, cv::Size(), 2.0, 2.0, cv::INTER_LINEAR);
-  //CVMatToImagePlane(sourceMat, imagePlane);
+  // IOPtoCVMat(input0(), sourceMat);
+  // cv::resize(sourceMat, sourceMat, cv::Size(), 2.0, 2.0, cv::INTER_LINEAR);
+  // CVMatToImagePlane(sourceMat, imagePlane);
 
   input0().fetchPlane(imagePlane);
 
@@ -67,25 +70,13 @@ void MLUpscalerIop::renderStripe(ImagePlane &imagePlane)
 
   Box box = imagePlane.bounds();
 
-  foreach(z, imagePlane.channels()) {
-    for (Box::iterator it = box.begin(); it != box.end(); it++) {
+  foreach (z, imagePlane.channels())
+  {
+    for (Box::iterator it = box.begin(); it != box.end(); it++)
+    {
       imagePlane.writableAt(it.x, it.y, imagePlane.chanNo(z)) *= 2;
     }
   }
-
-  Format in_f = input0().format();
-  const int fx = in_f.x();
-  const int fy = in_f.y();
-  const int fr = in_f.r();
-  const int ft = in_f.t();
-  const int new_width = in_f.width() * 2;
-  const int new_height = in_f.height() * 2;
-  const double in_pa = in_f.pixel_aspect();
-
-  Format new_format = Format(new_width, new_height, in_pa);
-
-  //info_.format(new_format);
-  //info_.set(format());
 }
 
 static Iop *build(Node *node) { return new MLUpscalerIop(node); }
