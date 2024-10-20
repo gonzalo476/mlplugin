@@ -24,13 +24,13 @@ void MLUpscalerIop::knobs(Knob_Callback f)
 
 void MLUpscalerIop::_validate(bool for_real)
 {
-
   // runs the validation method when input is connected or disconnected
   if (input(0))
   {
     input(0)->validate(for_real);
   }
-
+  
+  std::cout << "===================================================" << std::endl;
   std::cout << "Format size(): " << input0().format().size() << std::endl;
   std::cout << "Format area(): " << input0().format().area() << std::endl;
   std::cout << "Format height(): " << input0().format().height() << std::endl;
@@ -47,7 +47,7 @@ void MLUpscalerIop::_validate(bool for_real)
 
   info_.full_size_format(input0().full_size_format()); // size the default format to the project format
   info_.format(input0().format());                     // the size of the input image
-  info_.channels(Mask_RGB);                            // only RGB channels are needed
+  info_.channels(Mask_RGB);                            // only RGB channels are required
   info_.set(format());                                 // set the format
 }
 
