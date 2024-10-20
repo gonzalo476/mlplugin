@@ -25,11 +25,12 @@ void MLUpscalerIop::knobs(Knob_Callback f)
 void MLUpscalerIop::_validate(bool for_real)
 {
 
-  if (input(0)) {
+  // runs the validation method when input is connected or disconnected
+  if (input(0))
+  {
     input(0)->validate(for_real);
   }
 
-  // copy_info();
   std::cout << "Format size(): " << input0().format().size() << std::endl;
   std::cout << "Format area(): " << input0().format().area() << std::endl;
   std::cout << "Format height(): " << input0().format().height() << std::endl;
@@ -44,10 +45,10 @@ void MLUpscalerIop::_validate(bool for_real)
   std::cout << "Format x() : " << input0().format().x() << std::endl;
   std::cout << "Format y() : " << input0().format().y() << std::endl;
 
-  info_.full_size_format(input0().full_size_format()); // size the proxy format
-  info_.format(input0().format());                     // the size of the image
-  info_.channels(Mask_RGB);
-  info_.set(format());
+  info_.full_size_format(input0().full_size_format()); // size the default format to the project format
+  info_.format(input0().format());                     // the size of the input image
+  info_.channels(Mask_RGB);                            // only RGB channels are needed
+  info_.set(format());                                 // set the format
 }
 
 void MLUpscalerIop::getRequests(const Box &box, const ChannelSet &channels, int count, RequestOutput &reqData) const
